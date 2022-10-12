@@ -3,9 +3,3 @@
   chart:
     version: 6.2.1
     name: metrics-server
-- app: metrics-server
-  env: dev
-  name: minikube-dev
-  chart:
-    version: 6.2.1
-    name: metrics-server
