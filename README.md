@@ -22,3 +22,10 @@ POC that demonstrates how to structure a repo to deploy N charts with defaults/o
             ├── values-$ARGOCD_CLUSTER_1_NAME.yaml
             └── values-$ARGOCD_CLUSTER_2_NAME.yaml
 ```
+### Charts Dir
+Each chart being deployed as an application has a seperate subdir that contains a folder per version, defaults.yaml, and overrides.yaml.
+
+Defaults instruct ArgoCD what settings to configure for every application being generated, and the overrides file is to set different values per environment.
+
+### Values dir
+Each chart being deployed as an application has a seperate subdir that contains all values files besides the default. The applicationSet yaml passes both env and cluster values file to helm as optional. This means each application doesn't require both, or either. It enables multiple levels of configuration. 
