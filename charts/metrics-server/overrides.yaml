@@ -1,11 +1,9 @@
-- override: one
-  app: metrics-server
+- app: metrics-server
   env: sandbox
   chart:
     version: 6.2.1
     name: metrics-server
-- override: two
-  app: metrics-server
+- app: metrics-server
   clusterName: minikube-dev
   env: dev
   chart:

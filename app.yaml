@@ -51,22 +51,22 @@ spec:
                       env: '{{ env }}'
                       app: '{{ app }}'
                       chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
-          - matrix:
-              generators:
-                - git:
-                    repoURL: https://github.com/vette1861/helm-appsets.git
-                    revision: HEAD
-                    files:
-                    - path: charts/**/overrides.yaml # Check all chart dirs for overrides.yaml
-                - clusters:
-                    selector:
-                      matchExpressions:
-                        - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
-                    values:
-                      name: '{{ clusterName }}'
-                      env: '{{ metadata.labels.env }}'
-                      app: '{{ app }}'
-                      chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
+          # - matrix:
+          #     generators:
+          #       - git:
+          #           repoURL: https://github.com/vette1861/helm-appsets.git
+          #           revision: HEAD
+          #           files:
+          #           - path: charts/**/overrides.yaml # Check all chart dirs for overrides.yaml
+          #       - clusters:
+          #           selector:
+          #             matchExpressions:
+          #               - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
+          #           values:
+          #             name: '{{ clusterName }}'
+          #             env: '{{ metadata.labels.env }}'
+          #             app: '{{ app }}'
+          #             chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
           # - matrix:
           #     generators:
           #       - git:
