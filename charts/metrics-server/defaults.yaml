@@ -1,0 +1,5 @@
+- app: metrics-server
+  namespace: observability
+  chart:
+    version: 5.11.7
+    name: metrics-server

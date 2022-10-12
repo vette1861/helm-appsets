@@ -1,0 +1,5 @@
+metrics-server:
+  commonLabels:
+    foo: bar
+    values: base
+    chart_version: 5.11.7

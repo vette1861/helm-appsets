@@ -1,0 +1,76 @@
+# This applicationset will create an application for every chart in charts/* with values in values/*
+# Each chart can set defaults to apply to all env clusters
+# Each chart can set overrides to apply to specific env clusters
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: helm-poc-appset
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .. # Ensures charts path and values path is available for templating
+spec:
+  generators:
+    - merge:
+        mergeKeys: # Combined keys must be unique
+          - server
+          - app
+          - name
+        generators:
+          - matrix:
+              generators:
+                - git:
+                    repoURL: https://github.com/vette1861/helm-appsets.git
+                    revision: HEAD
+                    files:
+                    - path: helm-poc/charts/**/defaults.yaml # Check all chart dirs for defaults.yaml
+                - clusters:
+                    selector:
+                      matchExpressions:
+                        - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
+                    values:
+                      env: '{{ metadata.labels.env }}'
+                      app: '{{ app }}'
+                      chart.name: '{{ chart.name }}'
+                      chart.path: '{{ path }}/version-{{ chart.version }}' # Use default version Chart.yaml
+                      chart.pathValues: '/{{ path[0] }}/values' # preconfigure path to values file to simplify the template below
+                      namespace: '{{ namespace }}'
+          - matrix:
+              generators:
+                - git:
+                    repoURL: https://github.com/vette1861/helm-appsets.git
+                    revision: HEAD
+                    files:
+                    - path: helm-poc/charts/**/overrides.yaml # Check all chart dirs for overrides.yaml
+                - clusters:
+                    selector:
+                      matchLabels: 
+                        env: '{{ env }}' # Only override app if app + env are in overrides.yaml
+                      matchExpressions:
+                        - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
+                    values:
+                      env: '{{ env }}'
+                      app: '{{ app }}'
+                      chart.path: '{{ path }}/chart-{{ chart.version }}' # Use version specific Chart.yaml 
+  template:
+    metadata:
+      name: "{{ values.app }}-{{ values.env }}"
+      labels:
+        app: "{{ values.app }}"
+    spec:
+      project: default
+      destination:
+        server: '{{ server }}'
+        namespace: '{{ values.namespace }}'
+      source:
+        helm:
+          releaseName: '{{ values.chart.name }}'
+          valueFiles: # Optional cluster values file and env values file
+            - '{{ values.chart.pathValues }}/{{ values.app}}/cluster/values-{{ name }}.yaml'
+            - '{{ values.chart.pathValues }}/{{ values.app }}/env/values-{{ values.env }}.yaml'
+          ignoreMissingValueFiles: true
+        path: '{{ values.chart.path }}'
+        repoURL: https://github.com/vette1861/helm-appsets.git
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true

@@ -1,0 +1,5 @@
+metrics-server:
+  commonLabels:
+    env: staging
+    foo: bar
+    values: values-staging

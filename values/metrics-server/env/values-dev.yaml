@@ -1,0 +1,5 @@
+metrics-server:
+  commonLabels:
+    env: dev
+    foo: bar
+    values: values-dev

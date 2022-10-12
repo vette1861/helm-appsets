@@ -1,0 +1,84 @@
+# This applicationset will create an application for every chart in charts/* with values in values/*
+# Each chart can set defaults to apply to all env clusters
+# Each chart can set overrides to apply to specific env clusters
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: helm-poc-appset
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/manifest-generate-paths: .. # Ensures charts path and values path is available for templating
+spec:
+  generators:
+    - merge:
+        mergeKeys: # Combined keys must be unique
+          - server
+          - app
+          - name
+        generators:
+          - matrix:
+              generators:
+                - git:
+                    repoURL: https://github.com/vette1861/ArgoCDRollouts.git
+                    revision: HEAD
+                    files:
+                    - path: helm-poc/charts/**/defaults.yaml # Check all chart dirs for defaults.yaml
+                - clusters:
+                    selector:
+                      matchExpressions:
+                        - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
+                    values:
+                      env: '{{ metadata.labels.env }}'
+                      app: '{{ app }}'
+                      chartName: '{{ chart.name }}'
+                      chartVersion: '{{ chart.version }}'
+                      chartPath: 'helm-poc/charts/{{ app }}' # Use base Chart.yaml in app dir 
+                      chartValuesPath: '../../values/{{ app }}' # preconfigure path to values file to simplify the template below
+                      namespace: '{{ namespace }}'
+                      type: 'default'
+          - matrix:
+              generators:
+                - git:
+                    repoURL: https://github.com/vette1861/ArgoCDRollouts.git
+                    revision: HEAD
+                    files:
+                    - path: helm-poc/charts/**/overrides.yaml # Check all chart dirs for overrides.yaml
+                - clusters:
+                    selector:
+                      matchLabels: 
+                        env: '{{ env }}' # Only override app if app + env are in overrides.yaml
+                      matchExpressions:
+                        - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
+                    values:
+                      env: '{{ env }}'
+                      app: '{{ app }}'
+                      chartName: '{{ chart.name }}'
+                      chartVersion: '{{ chart.version }}'
+                      chartPath: 'helm-poc/charts/{{ app }}/{{ env }}' # Use env specific Chart.yaml 
+                      chartValuesPath: '../../../values/{{ app }}' # preconfigure path to values file to simplify the template below
+                      namespace: '{{ namespace }}'
+                      type: 'override'
+  template:
+    metadata:
+      name: "{{ values.app }}-{{ name }}"
+      labels:
+        app: "{{ values.app }}"
+    spec:
+      project: default
+      destination:
+        server: '{{ server }}'
+        namespace: '{{ values.namespace }}'
+      source:
+        plugin:
+          name: '{{ values.defaults.plugin.name }}'
+          env: 
+            - name: HELM_NAME
+              value: '{{ values.chartName }}'
+            - name: helm_args
+              value: -f '{{ values.chartValuesPath}}/values-{{ values.env }}.yaml' -f '{{ values.chartValuesPath }}/values.yaml'
+        path: '{{ values.chartPath }}'
+        repoURL: https://github.com/vette1861/ArgoCDRollouts.git
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
