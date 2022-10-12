@@ -63,7 +63,7 @@ spec:
                       matchExpressions:
                         - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
                     values:
-                      name: 'minikube-dev'
+                      name: '{{ clusterName }}'
                       env: '{{ metadata.labels.env }}'
                       app: '{{ app }}'
                       chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
