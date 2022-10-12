@@ -22,7 +22,7 @@ spec:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
-                    - path: helm-poc/charts/**/defaults.yaml # Check all chart dirs for defaults.yaml
+                    - path: charts/**/defaults.yaml # Check all chart dirs for defaults.yaml
                 - clusters:
                     selector:
                       matchExpressions:
@@ -40,7 +40,7 @@ spec:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
-                    - path: helm-poc/charts/**/overrides.yaml # Check all chart dirs for overrides.yaml
+                    - path: charts/**/overrides.yaml # Check all chart dirs for overrides.yaml
                 - clusters:
                     selector:
                       matchLabels: 
@@ -50,7 +50,7 @@ spec:
                     values:
                       env: '{{ env }}'
                       app: '{{ app }}'
-                      chart.path: '{{ path }}/chart-{{ chart.version }}' # Use version specific Chart.yaml 
+                      chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
   template:
     metadata:
       name: "{{ values.app }}-{{ values.env }}"
