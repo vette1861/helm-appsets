@@ -20,4 +20,5 @@ POC that demonstrates how to structure a repo to deploy N charts with defaults/o
         │   └── values-$ENV.yaml
         └── cluster/
             ├── values-$ARGOCD_CLUSTER_1_NAME.yaml
-            └── values-$ARGOCD_CLUSTER_2_NAME.yaml```
+            └── values-$ARGOCD_CLUSTER_2_NAME.yaml
+```
