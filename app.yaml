@@ -28,7 +28,7 @@ spec:
       project: default
       destination:
         server: '{{ server }}'
-        namespace: '{{ overrides.namespace }}'
+        namespace: '{{ namespace }}'
       source:
         helm:
           releaseName: '{{ app }}'
