@@ -63,8 +63,8 @@ spec:
         helm:
           releaseName: '{{ chart.name }}'
           valueFiles: # Optional cluster values file and env values file
-            - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
-            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ env }}.yaml'
+            - '/values/{{ app }}/cluster/values-{{ name }}.yaml'
+            - '/values/{{ app }}/env/values-{{ env }}.yaml'
           ignoreMissingValueFiles: true
         path: '{{ path }}/version-{{ chart.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
