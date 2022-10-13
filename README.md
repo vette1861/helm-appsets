@@ -4,7 +4,7 @@ POC that demonstrates how to structure a repo to deploy N charts with defaults/o
 Until ArgoCD version 2.6 there is a tradeoff between using a remote Helm chart directly, and referencing a remote Helm chart as a dependency. 
 
 ### As a dependency
-===
+======
 #### The Good
 The benefit of this approach is deploying additional templates packaged with the remote Helm chart is trivial, and passing override values files is also lightweight.
 #### The Bad
