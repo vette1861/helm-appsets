@@ -17,6 +17,7 @@ spec:
                 - env
                 - chart.name
                 - chart.version
+                - cluster
               generators:
                 - git:
                     repoURL: https://github.com/vette1861/helm-appsets.git
