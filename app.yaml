@@ -10,47 +10,33 @@ metadata:
     argocd.argoproj.io/manifest-generate-paths: .. # Ensures charts path and values path is available for templating
 spec:
   generators:
-    - merge:
-        mergeKeys:
-          - name
-          - chart
-          - env
-        generators:
-          - matrix:
-              generators:
-                - git:
-                    repoURL: https://github.com/vette1861/helm-appsets.git
-                    revision: HEAD
-                    files:
-                    - path: charts/**/defaults.yaml 
-                - clusters: {}
-          - matrix:
-              generators:
-                - git:
-                    repoURL: https://github.com/vette1861/helm-appsets.git
-                    revision: HEAD
-                    files:
-                    - path: charts/**/overrides.yaml 
-                - clusters: {}
+    - matrix:
+      generators:
+        - git:
+            repoURL: https://github.com/vette1861/helm-appsets.git
+            revision: HEAD
+            files:
+            - path: charts/**/overrides.yaml 
+        - clusters: {}
   template:
     metadata:
-      name: '{{ app }}-{{ env }}-{{ chart.version }}'
+      name: '{{ app }}-{{ overrides.env }}-{{ overrides.chart.version }}'
       labels:
         app: "{{ app }}"
-        env: "{{ env }}"
+        env: "{{ overrides.env }}"
     spec:
       project: default
       destination:
         server: '{{ server }}'
-        namespace: '{{ namespace }}'
+        namespace: '{{ overrides.namespace }}'
       source:
         helm:
-          releaseName: '{{ chart.name }}'
+          releaseName: '{{ app }}'
           valueFiles: # Optional cluster values file and env values file
             - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
-            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ env }}.yaml'
+            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ overrides.env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ chart.version }}'
+        path: '{{ path }}/version-{{ overrides.chart.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
