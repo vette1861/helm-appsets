@@ -1,9 +1,10 @@
 app: metrics-server
 namespace: observability
-overrides:
-- env: sandbox
-  name: minikube-sandbox
-  version: 6.2.1
+overrides: [
+  - env: sandbox
+    name: minikube-sandbox
+    version: 6.2.1
+]
 # - app: metrics-server
 #   name: minikube-sandbox
 #   env: sandbox
