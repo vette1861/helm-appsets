@@ -10,28 +10,28 @@ metadata:
     argocd.argoproj.io/manifest-generate-paths: .. # Ensures charts path and values path is available for templating
 spec:
   generators:
-    - matrix:
+    - merge:
+        mergeKeys:
+          - name
+          - chart
+          - env
         generators:
-          - merge:
-              mergeKeys:
-                - env
-                - chart.name
-                - chart.version
-                - cluster
+          - matrix:
               generators:
                 - git:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
-                    - path: charts/**/defaults.yaml
+                    - path: charts/**/defaults.yaml 
+                - clusters: {}
+          - matrix:
+              generators:
                 - git:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
                     - path: charts/**/overrides.yaml 
-          - list:
-              elements:
-              - chart.name: '{{ chart.name }}'
+                - clusters: {}
   template:
     metadata:
       name: '{{ app }}-{{ env }}-{{ chart.version }}'
@@ -41,11 +41,11 @@ spec:
     spec:
       project: default
       destination:
-        server: '{{ values.cluster }}'
+        server: '{{ server }}'
         namespace: '{{ namespace }}'
       source:
         helm:
-          releaseName: '{{ chart }}'
+          releaseName: '{{ chart.name }}'
           valueFiles: # Optional cluster values file and env values file
             - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
             - '/{{ path[0] }}/values/{{ app }}/env/values-{{ env }}.yaml'
