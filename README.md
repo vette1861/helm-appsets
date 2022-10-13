@@ -21,6 +21,9 @@ v2.6 will change this entirely and we will be able to use a remote Helm Chart di
 
 With that said, even after v2.6 I recommend using the dir pattern I proposed. All charts inside charts/ should be published to Jfrog and retrieved from there. All values files inside values/ should remain local, and be referenced in the application spec.
 
+[Helm chart + values files from Git](https://github.com/argoproj/argo-cd/issues/2789)
+[Multiple sources for applications](https://github.com/argoproj/argo-cd/pull/10432)
+
 ## dir structure
 ```
 .
