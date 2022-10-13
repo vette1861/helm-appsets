@@ -17,13 +17,16 @@ spec:
               revision: HEAD
               files:
               - path: charts/**/overrides.yaml 
-          - list:
-              elements:
-              - overrides: '{{ overrides }}'
-                cluster: '{{ overrides[0].name }}'
+          - clusters:
+              selector:
+                matchLabels:
+                  env: '{{ overrides.env }}'
+              values:
+                env: '{{ overrides.env }}'
+                version: '{{ overrides.version }} '
   template:
     metadata:
-      name: '{{ app }}-{{ overrides[0].env }}-aa'
+      name: '{{ app }}-{{ values.env }}-{{ name }}-aa'
     spec:
       project: default
       destination:
@@ -34,9 +37,9 @@ spec:
           releaseName: '{{ app }}'
           valueFiles: # Optional cluster values file and env values file
             - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
-            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ overrides[0].env }}.yaml'
+            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ values.env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ overrides[0].version }}'
+        path: '{{ path }}/version-{{ values.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
