@@ -4,9 +4,6 @@ overrides:
 - env: sandbox
   name: minikube-sandbox
   version: 6.2.1
-- env: dev
-  name: minikube-dev
-  version: 6.2.1
 # - app: metrics-server
 #   name: minikube-sandbox
 #   env: sandbox
