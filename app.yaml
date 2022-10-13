@@ -12,18 +12,34 @@ spec:
   generators:
     - matrix:
         generators:
-          - git:
-              repoURL: https://github.com/vette1861/helm-appsets.git
-              revision: HEAD
-              files:
-              - path: charts/**/defaults.yaml
-              - path: charts/**/overrides.yaml 
-          - list:
-              elements:
-              - app: '{{ app }}'
+          - merge:
+              mergeKeys:
+                - env
+                - chart.name
+                - chart.version
+              generators:
+                - git:
+                    repoURL: https://github.com/vette1861/helm-appsets.git
+                    revision: HEAD
+                    files:
+                    - path: charts/**/defaults.yaml
+                - git:
+                    repoURL: https://github.com/vette1861/helm-appsets.git
+                    revision: HEAD
+                    files:
+                    - path: charts/**/overrides.yaml 
+          - clusters:
+              selector:
+                matchLabels:
+                  env: '{{ env }}'
+                matchExpressions:
+                  - {key: env, operator: Exists}
+              values:
                 env: '{{ env }}'
-                chart: '{{ chart.name }}'
-                version: '{{ chart.version }}'
+                path: '{{ path.basename }}'
+                chart.name: '{{ chart.name }}'
+                chart.version: '{{ chart.version }}'
+                cluster: '{{ name }}'
                 # - list:
                 #     elements:
                 #     - appName: '{{ app }}'
@@ -79,24 +95,24 @@ spec:
           #             chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
   template:
     metadata:
-      name: "{{ app }}-clustername-{{ env }}-{{ chart.version }}"
+      name: '{{ values.app }}-{{ values.cluster }}-{{ values.chart.version }}'
       labels:
         app: "{{ app }}"
         env: "{{ env }}"
-        version: "{{ chart.version }}"
+        version: "{{ values.chart.version }}"
     spec:
       project: default
       destination:
-        server: 'https://kubernetes.default.svc'
-        namespace: "{{ namespace }}"
+        server: '{{ values.cluster }}'
+        namespace: '{{ namespace }}'
       source:
         helm:
-          releaseName: '{{ chart.name }}'
+          releaseName: '{{ chart }}'
           valueFiles: # Optional cluster values file and env values file
             # - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
             - '/{{ path[0] }}/values/{{ app }}/env/values-{{ env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ chart.version }}'
+        path: '{{ path }}/version-{{ values.chart.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
