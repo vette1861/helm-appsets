@@ -1,9 +1,9 @@
 - app: metrics-server
   env: sandbox
-  chartversion: 6.2.1
+  chartversion: '6.2.1'
   chartname: metrics-server
 - app: metrics-server
   name: minikube-dev
   env: dev
-  chartversion: 6.2.1
+  chartversion: '6.2.1'
   chartname: metrics-server
