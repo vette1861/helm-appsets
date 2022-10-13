@@ -24,7 +24,7 @@ Until v2.6 of ArgoCD is released, an application can only have ONE source. This 
 ### The Informative
 v2.6 will change this entirely and we will be able to use a remote Helm Chart directly, while storing values file in our own repo. Once this is a thing, we should aim to use remote charts from Jfrog exclusively. And for charts with additional templates beyond the base chart, we should publish these to Jfrog as well and retrieve them from there. 
 
-With that said, even after v2.6 I recommend using the dir pattern I proposed. All charts inside charts/ should be published to Jfrog and retrieved from there. All values files inside values/ should remain local, and be referenced in the application spec.
+With that said, even after v2.6 I recommend using the dir pattern I proposed. All charts inside charts/$APP_NAME should be published to Jfrog and retrieved from there. All values files inside values/ should remain local, and be referenced in the application spec.
 
 ArgoCD Github Issue - [Helm chart + values files from Git](https://github.com/argoproj/argo-cd/issues/2789)  
 ArgoCD Github PR - [Multiple sources for applications](https://github.com/argoproj/argo-cd/pull/10432)
