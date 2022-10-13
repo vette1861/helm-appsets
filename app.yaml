@@ -13,53 +13,45 @@ spec:
     - merge:
         mergeKeys:
           - name
-          - chart.name
+          - chart
           - env
         generators:
-          - merge:
-              mergeKeys:
-                - chart.name
-                - chart.version
-                - chart.env
+          - matrix:
               generators:
                 - git:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
                     - path: charts/**/defaults.yaml 
+                - clusters:
+                    matchLabels:
+                      env: '{{ env }}'
+          - matrix:
+              generators:
                 - git:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
                     - path: charts/**/overrides.yaml 
-          - clusters:
-              selector:
-                matchLabels:
-                  env: '{{ env }}'
-              values:
-                chart.name: '{{ chart.name }}'
-                chart.version: '{{ chart.version }}'
-                env: '{{ metadata.labels.env }}'
-                namespace: '{{ namespace }}'
-              # selector:
-              #   matchLabels:
-              #     env: '{{ env }}'
+                - clusters:
+                    matchLabels:
+                      env: '{{ env }}'
   template:
     metadata:
-      name: "{{ app }}-{{ name }}-{{ values.env }}-{{ values.chart.version }}"
+      name: "{{ app }}-{{ name }}-{{ chart.version }}"
     spec:
       project: default
       destination:
-        server: '{{ name }}'
-        namespace: '{{ values.namespace }}'
+        server: '{{ server }}'
+        namespace: '{{ namespace }}'
       source:
         helm:
-          releaseName: '{{ values.chart.name }}'
+          releaseName: '{{ chart.name }}'
           valueFiles: # Optional cluster values file and env values file
             - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
-            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ values.env }}.yaml'
+            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ values.chart.version }}'
+        path: '{{ path }}/version-{{ chart.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
