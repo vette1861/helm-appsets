@@ -23,9 +23,7 @@ spec:
                     revision: HEAD
                     files:
                     - path: charts/**/defaults.yaml 
-                - clusters:
-                    matchLabels:
-                      env: '{{ env }}'
+                - clusters: {}
           - matrix:
               generators:
                 - git:
@@ -33,12 +31,13 @@ spec:
                     revision: HEAD
                     files:
                     - path: charts/**/overrides.yaml 
-                - clusters:
-                    matchLabels:
-                      env: '{{ env }}'
+                - clusters: {}
   template:
     metadata:
-      name: "{{ app }}-{{ name }}-{{ chart.version }}"
+      name: '{{ app }}-{{ name }}-{{ chart.version }}'
+      labels:
+        env: '{{ env }}'
+        app: '{{ app }}'
     spec:
       project: default
       destination:
