@@ -4,8 +4,7 @@
     version: 6.2.1
     name: metrics-server
 - app: metrics-server
-  clusterName: minikube-dev
-  env: dev
+  name: minikube-dev
   chart:
     version: 6.2.1
     name: metrics-server
