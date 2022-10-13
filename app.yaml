@@ -11,16 +11,16 @@ metadata:
 spec:
   generators:
     - matrix:
-      generators:
-        - git:
-            repoURL: https://github.com/vette1861/helm-appsets.git
-            revision: HEAD
-            files:
-            - path: charts/**/overrides.yaml 
-        - clusters: {}
+        generators:
+          - git:
+              repoURL: https://github.com/vette1861/helm-appsets.git
+              revision: HEAD
+              files:
+              - path: charts/**/overrides.yaml 
+          - clusters: {}
   template:
     metadata:
-      name: '{{ app }}-{{ overrides.env }}-{{ overrides.chart.version }}'
+      name: '{{ app }}-{{ overrides.env }}-{{ overrides.version }}'
       labels:
         app: "{{ app }}"
         env: "{{ overrides.env }}"
@@ -36,7 +36,7 @@ spec:
             - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
             - '/{{ path[0] }}/values/{{ app }}/env/values-{{ overrides.env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ overrides.chart.version }}'
+        path: '{{ path }}/version-{{ overrides.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
