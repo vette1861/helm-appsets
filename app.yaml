@@ -10,37 +10,56 @@ metadata:
     argocd.argoproj.io/manifest-generate-paths: .. # Ensures charts path and values path is available for templating
 spec:
   generators:
-    - matrix:
+    - merge:
+        mergeKeys:
+          - name
+          - chart.name
+          - env
         generators:
-          - git:
-              repoURL: https://github.com/vette1861/helm-appsets.git
-              revision: HEAD
-              files:
-              - path: charts/**/overrides.yaml 
+          - merge:
+              mergeKeys:
+                - chart.name
+                - chart.version
+                - chart.env
+              generators:
+                - git:
+                    repoURL: https://github.com/vette1861/helm-appsets.git
+                    revision: HEAD
+                    files:
+                    - path: charts/**/defaults.yaml 
+                - git:
+                    repoURL: https://github.com/vette1861/helm-appsets.git
+                    revision: HEAD
+                    files:
+                    - path: charts/**/overrides.yaml 
           - clusters:
               selector:
                 matchLabels:
                   env: '{{ env }}'
-              # values:
-              #   env: '{{ env }}'
-              #   chart: '{{ app }}'
-              #   version: '{{ version }}'
+              values:
+                chart.name: '{{ chart.name }}'
+                chart.version: '{{ chart.version }}'
+                env: '{{ metadata.labels.env }}'
+                namespace: '{{ namespace }}'
+              # selector:
+              #   matchLabels:
+              #     env: '{{ env }}'
   template:
     metadata:
-      name: '{{ app }}-{{ name }}-{{ chart.version }}'
+      name: "{{ app }}-{{ name }}-{{ values.env }}-{{ values.chart.version }}"
     spec:
       project: default
       destination:
-        server: '{{ server }}'
-        namespace: '{{ namespace }}'
+        server: '{{ name }}'
+        namespace: '{{ values.namespace }}'
       source:
         helm:
-          releaseName: '{{ chart.name }}'
+          releaseName: '{{ values.chart.name }}'
           valueFiles: # Optional cluster values file and env values file
             - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
-            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ env }}.yaml'
+            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ values.env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ chart.version }}'
+        path: '{{ path }}/version-{{ values.chart.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
