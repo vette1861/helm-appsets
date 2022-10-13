@@ -23,7 +23,7 @@ spec:
                   env: '{{ overrides.env }}'
               values:
                 env: '{{ overrides.env }}'
-                version: '{{ overrides.version }} '
+                version: '{{ overrides.version }}'
   template:
     metadata:
       name: '{{ app }}-{{ values.env }}-{{ name }}-aa'
