@@ -20,26 +20,27 @@ spec:
           - clusters:
               selector:
                 matchLabels:
-                  env: '{{ overrides.env }}'
-              values:
-                env: '{{ overrides.env }}'
-                version: '{{ overrides.version }}'
+                  env: '{{ env }}'
+              # values:
+              #   env: '{{ env }}'
+              #   chart: '{{ app }}'
+              #   version: '{{ version }}'
   template:
     metadata:
-      name: '{{ app }}-{{ values.env }}-{{ name }}-aa'
+      name: '{{ app }}-{{ name }}-{{ chart.version }}'
     spec:
       project: default
       destination:
-        server: '{{ cluster }}'
+        server: '{{ server }}'
         namespace: '{{ namespace }}'
       source:
         helm:
-          releaseName: '{{ app }}'
+          releaseName: '{{ chart.name }}'
           valueFiles: # Optional cluster values file and env values file
             - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
-            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ values.env }}.yaml'
+            - '/{{ path[0] }}/values/{{ app }}/env/values-{{ env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ values.version }}'
+        path: '{{ path }}/version-{{ chart.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
