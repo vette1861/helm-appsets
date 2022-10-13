@@ -29,78 +29,15 @@ spec:
                     revision: HEAD
                     files:
                     - path: charts/**/overrides.yaml 
-          - clusters:
-              selector:
-                matchLabels:
-                  env: '{{ env }}'
-                matchExpressions:
-                  - {key: env, operator: Exists}
-              values:
-                env: '{{ env }}'
-                path: '{{ path.basename }}'
-                chart.name: '{{ chart.name }}'
-                chart.version: '{{ chart.version }}'
-                cluster: '{{ name }}'
-                # - list:
-                #     elements:
-                #     - appName: '{{ app }}'
-                #       chartVersion: '{{ chart.version }}'
-                #       chartPath: '{{ path }}/version-{{ chart.version }}'
-                #       chartPathValues: '/{{ path[0] }}/values'
-                #       chartName: '{{ chart.name }}'
-                #       appNamespace: '{{ namespace }}'
-                #       appEnv: '{{ env }}'
-
-                # - list:
-                #     elements:
-                #     - appName: '{{ app }}'
-                #       chartVersion: '{{ chart.version }}'
-                #       chartPath: '{{ path }}/version-{{ chart.version }}'
-                #       chartPathValues: '/{{ path[0] }}/values'
-                #       chartName: '{{ chart.name }}'
-                #       appNamespace: '{{ namespace }}'
-                #       appEnv: '{{ env }}'
-          # - matrix:
-          #     generators:
-          #       - git:
-          #           repoURL: https://github.com/vette1861/helm-appsets.git
-          #           revision: HEAD
-          #           files:
-          #           - path: charts/**/overrides.yaml # Check all chart dirs for overrides.yaml
-          #       - clusters:
-          #           selector:
-          #             matchExpressions:
-          #               - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
-          #           values:
-          #             name: '{{ clusterName }}'
-          #             env: '{{ metadata.labels.env }}'
-          #             app: '{{ app }}'
-          #             chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
-          # - matrix:
-          #     generators:
-          #       - git:
-          #           repoURL: https://github.com/vette1861/helm-appsets.git
-          #           revision: HEAD
-          #           files:
-          #           - path: charts/**/overrides.yaml # Check all chart dirs for overrides.yaml
-          #       - clusters:
-          #           selector:
-          #             matchLabels: 
-          #               env: '{{ env }}' # Only override app if app + env are in overrides.yaml
-                      # matchExpressions:
-                      #   - {key: env, operator: Exists} # Ensure cluster secret is labeled with env
-          #           values:
-          #             env: '{{ metadata.labels.env }}'
-          #             name: '{{ clusterName }}'
-          #             app: '{{ app }}'
-          #             chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
+          - list:
+              elements:
+              - chart.name: '{{ chart.name }}'
   template:
     metadata:
-      name: '{{ values.app }}-{{ values.cluster }}-{{ values.chart.version }}'
+      name: '{{ app }}-{{ env }}-{{ chart.version }}'
       labels:
         app: "{{ app }}"
         env: "{{ env }}"
-        version: "{{ values.chart.version }}"
     spec:
       project: default
       destination:
@@ -110,10 +47,10 @@ spec:
         helm:
           releaseName: '{{ chart }}'
           valueFiles: # Optional cluster values file and env values file
-            # - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
+            - '/{{ path[0] }}/values/{{ app }}/cluster/values-{{ name }}.yaml'
             - '/{{ path[0] }}/values/{{ app }}/env/values-{{ env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ values.chart.version }}'
+        path: '{{ path }}/version-{{ chart.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
