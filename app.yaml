@@ -87,7 +87,7 @@ spec:
           #             chart.path: '{{ path }}/version-{{ chart.version }}' # Use version specific Chart.yaml 
   template:
     metadata:
-      name: '{{ values.chartname }}-{{ name }}-{{ values.chartversion }}'
+      name: 'metrics-server-{{ name }}-aaaa'
     spec:
       project: default
       destination:
