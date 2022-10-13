@@ -1,7 +1,6 @@
 - app: metrics-server
-  env: sandbox
-  name: minikube-sandbox
-  namespace: observability
+  env: dev
+  name: minikube-dev
   chart:
     version: 6.2.1
     name: metrics-server
