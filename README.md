@@ -12,6 +12,7 @@ As a dependency, Helm is able to retrieve the remote Helm chart just fine, but d
 Initially I setup subfolders in charts/metrics-server for each environment and then created a Chart.yaml that set the chart version. I wasn't a fan because the approach seemed redundant so I settled on creating subfolders for each chart version. When an application is generated, chart version is interpolated, and the corresponding Chart.yaml is used. This enables us to easily add additional versions, or even additional templates to a specific version.
 
 ### As a remote Helm chart
+---
 #### The Good
 When the remote helm chart is sourced by the application, version can be set directly. This means defaulting the underlying Helm chart is incredibly easy.
 #### The Bad
