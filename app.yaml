@@ -20,10 +20,10 @@ spec:
           - clusters: {}
   template:
     metadata:
-      name: '{{ app }}-{{ overrides.env }}-{{ overrides.version }}'
+      name: '{{ app }}-{{ overrides.env }}-aa'
       labels:
         app: "{{ app }}"
-        env: "{{ overrides.env }}"
+        env: '{{ overrides.env }}'
     spec:
       project: default
       destination:
