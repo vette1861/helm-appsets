@@ -7,7 +7,6 @@
     name: metrics-server
 - app: metrics-server
   cluster: minikube-dev
-  env: dev
   namespace: observability
   chart: 
     version: 6.2.1
