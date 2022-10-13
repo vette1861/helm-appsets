@@ -1,16 +1,33 @@
-- override: metrics-server-minikube-sandbox
-  app: metrics-server
-  name: minikube-sandbox
-  env: sandbox
-  namespace: observability
-  chart: 
-    version: 6.2.1
-    name: metrics-server
-- override: metrics-server-minikube-dev
-  app: metrics-server
-  name: minikube-dev
-  env: dev
-  namespace: observability
-  chart: 
-    version: 6.2.1
-    name: metrics-server
+override_list:
+  - override: metrics-server-minikube-dev
+    app: metrics-server
+    name: minikube-sandbox
+    env: sandbox
+    namespace: observability
+    chart: 
+      version: 6.2.1
+      name: metrics-server
+  - override: metrics-server-minikube-dev
+    app: metrics-server
+    name: minikube-dev
+    env: dev
+    namespace: observability
+    chart: 
+      version: 6.2.1
+      name: metrics-server
+# - override: metrics-server-minikube-sandbox
+#   app: metrics-server
+#   name: minikube-sandbox
+#   env: sandbox
+#   namespace: observability
+#   chart: 
+#     version: 6.2.1
+#     name: metrics-server
+# - override: metrics-server-minikube-dev
+#   app: metrics-server
+#   name: minikube-dev
+#   env: dev
+#   namespace: observability
+#   chart: 
+#     version: 6.2.1
+#     name: metrics-server
