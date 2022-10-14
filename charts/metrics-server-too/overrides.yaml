@@ -1,21 +1,7 @@
 - env: dev
   name: minikube-dev
-  automate: "true"
-  namespace: newnew
+  # automate: "true"
+  # namespace: override-namespace
   chart:
     version: 6.2.1
     name: metrics-server
-# - app: metrics-server
-#   name: minikube-sandbox
-#   env: sandbox
-#   namespace: observability
-#   chart: 
-#     version: 6.2.1
-#     name: metrics-server
-# - app: metrics-server
-#   name: minikube-dev
-#   env: dev
-#   namespace: observability
-#   chart: 
-#     version: 6.2.1
-#     name: metrics-server
