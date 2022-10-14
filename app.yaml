@@ -21,8 +21,10 @@ spec:
               generators:
                 - git:
                     selector:
-                      matchLabels:
-                        auto.deploy: true
+                      matchExpressions:
+                        - key: auto.deploy
+                          operator: In
+                          values: ["true"]
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
@@ -41,8 +43,10 @@ spec:
               generators:
                 - git:
                     selector:
-                      matchLabels:
-                        auto.deploy: true
+                      matchExpressions:
+                        - key: auto.deploy
+                          operator: In
+                          values: ["true"]
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
@@ -50,7 +54,6 @@ spec:
                 - clusters:
                     selector:
                       matchLabels:
-                        auto.deploy: true
                         env: '{{ env }}'
                     values:
                       chart: '{{ path.basename }}-{{ chart.version }}'
