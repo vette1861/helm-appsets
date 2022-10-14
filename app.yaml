@@ -53,6 +53,7 @@ spec:
       labels:
         app: '{{ app }}'
         env: '{{ env }}'
+        deployed: '{{ automate }}'
         version: '{{ chart.version }}'
     spec:
       project: default
