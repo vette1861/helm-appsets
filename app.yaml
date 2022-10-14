@@ -17,34 +17,42 @@ spec:
           - env
           - path.basename
         generators:
-          - matrix:
-              generators:
-                - git:
-                    repoURL: https://github.com/vette1861/helm-appsets.git
-                    revision: HEAD
-                    files:
-                    - path: charts/global_defaults.yaml 
-                - list:
-                    elements:
-                    - auto.deploy: '{{ auto.deploy }}'
-                      env: '{{ env }}'
           # Gets each chart in charts/ and matches service defaults to cluster
           - matrix:
               generators:
+                # - merge:
+                #     mergeKeys:
+                #       - env
+                #       - app
+                #       - chart
+                #       - path.basename
+                #     generators:
+                #       - git:
+                #           repoURL: https://github.com/vette1861/helm-appsets.git
+                #           revision: HEAD
+                #           files:
+                #           - path: charts/global_defaults.yaml
+                #       - git:
+                #           repoURL: https://github.com/vette1861/helm-appsets.git
+                #           revision: HEAD
+                #           files:
+                #           - path: charts/**/defaults.yaml
                 - git:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
                     - path: charts/**/defaults.yaml 
+                    - path: charts/global_defaults.yaml
                 - clusters:
                     selector:
                       matchLabels:
                         env: '{{ env }}'
                     values:
+                      app: '{{ app }}'
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      # auto.deploy: "true"
+                      auto.deploy: '{{ auto.deploy }}'
           # Gets each chart in charts/ and matches service overrides to cluster
           - matrix:
               generators:
@@ -61,12 +69,12 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      # auto.deploy: '{{ auto.deploy }}'
+                      auto.deploy: '{{ auto.deploy }}'
       # Limit service applications per env/cluster ( auto.deploy ) 
       # Limit service applications per folder ( path.basename ) list
       selector:
         matchLabels:
-          auto.deploy: "true" # To prevent ArgoCD from generating an application for a specific env/cluster
+          values.auto.deploy: "true" # To prevent ArgoCD from generating an application for a specific env/cluster
         matchExpressions:
           - key: path.basename
             operator: NotIn
