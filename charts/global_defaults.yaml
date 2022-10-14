@@ -1,1 +1,8 @@
-auto.deploy: true
+- env: sandbox
+  auto.deploy: true
+- env: dev
+  auto.deploy: true
+- env: staging
+  auto.deploy: true
+- env: prod
+  auto.deploy: true
