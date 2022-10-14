@@ -20,29 +20,11 @@ spec:
           # Gets each chart in charts/ and matches service defaults to cluster
           - matrix:
               generators:
-                # - merge:
-                #     mergeKeys:
-                #       - env
-                #       - app
-                #       - chart
-                #       - path.basename
-                #     generators:
-                #       - git:
-                #           repoURL: https://github.com/vette1861/helm-appsets.git
-                #           revision: HEAD
-                #           files:
-                #           - path: charts/global_defaults.yaml
-                #       - git:
-                #           repoURL: https://github.com/vette1861/helm-appsets.git
-                #           revision: HEAD
-                #           files:
-                #           - path: charts/**/defaults.yaml
                 - git:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
                     - path: charts/**/defaults.yaml 
-                    - path: charts/global_defaults.yaml
                 - clusters:
                     selector:
                       matchLabels:
@@ -52,7 +34,7 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      auto.deploy: '{{ auto.deploy }}'
+                      auto.deploy: 'true'
           # Gets each chart in charts/ and matches service overrides to cluster
           - matrix:
               generators:
