@@ -49,9 +49,9 @@ spec:
                       env: '{{ env }}'
   template:
     metadata:
-      name: '{{ path.basename }}-{{ name }}'
+      name: '{{ app }}-{{ name }}'
       labels:
-        app: '{{ path.basename }}'
+        app: '{{ app }}'
         env: '{{ env }}'
         version: '{{ chart.version }}'
     spec:
@@ -61,7 +61,7 @@ spec:
         namespace: '{{ namespace }}'
       source:
         helm:
-          releaseName: '{{ chart.name }}'
+          releaseName: '{{ app }}'
           valueFiles: # Optional cluster values file and env values file
             - '/values/{{ app }}/cluster/values-{{ name }}.yaml'
             - '/values/{{ app }}/env/values-{{ env }}.yaml'
