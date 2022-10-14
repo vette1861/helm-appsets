@@ -29,7 +29,7 @@ spec:
                       matchLabels:
                         env: '{{ env }}'
                     values:
-                      chart: '{{ chart.name }}-{{ chart.version }}'
+                      chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
           - matrix:
@@ -44,14 +44,14 @@ spec:
                       matchLabels:
                         env: '{{ env }}'
                     values:
-                      chart: '{{ chart.name }}-{{ chart.version }}'
+                      chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
   template:
     metadata:
-      name: '{{ app }}-{{ name }}'
+      name: '{{ path.basename }}-{{ name }}'
       labels:
-        app: '{{ chart.name }}'
+        app: '{{ path.basename }}'
         env: '{{ env }}'
         version: '{{ chart.version }}'
     spec:

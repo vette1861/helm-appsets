@@ -1,5 +1,4 @@
-- app: metrics-server
-  env: dev
+- env: dev
   name: minikube-dev
   chart:
     version: 6.2.1

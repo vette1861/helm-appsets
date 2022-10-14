@@ -1,23 +1,19 @@
-- app: metrics-server
-  env: sandbox
+- env: sandbox
   namespace: observability
   chart:
     version: 5.11.7
     name: metrics-server
-- app: metrics-server
-  env: dev
+- env: dev
   namespace: observability
   chart:
     version: 5.11.7
     name: metrics-server
-- app: metrics-server
-  env: staging
+- env: staging
   namespace: observability
   chart:
     version: 5.11.7
     name: metrics-server
-- app: metrics-server
-  env: prod
+- env: prod
   namespace: observability
   chart:
     version: 5.11.7
