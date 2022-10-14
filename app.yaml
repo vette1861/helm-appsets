@@ -32,7 +32,7 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      deploy: '{{ automate }}'
+                      auto.deploy: '{{ auto.deploy }}'
           - matrix:
               generators:
                 - git:
@@ -48,14 +48,13 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      deploy: '{{ automate }}'
+                      auto.deploy: '{{ auto.deploy }}'
   template:
     metadata:
       name: '{{ app }}-{{ name }}'
       labels:
         app: '{{ app }}'
         env: '{{ env }}'
-        # deployed: '{{ automate }}'
         version: '{{ chart.version }}'
     spec:
       project: default
