@@ -51,7 +51,7 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      auto.deploy: '{{ auto.deploy }}'
+                      # auto.deploy: 'true'
       # Limit service applications per env/cluster ( auto.deploy ) 
       # Limit service applications per folder ( path.basename ) list
       selector:
@@ -69,6 +69,7 @@ spec:
         app: '{{ app }}'
         env: '{{ env }}'
         version: '{{ chart.version }}'
+        deploy: '{{ values.auto.deploy }}'
     spec:
       project: default
       destination:
