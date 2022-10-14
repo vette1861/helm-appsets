@@ -9,6 +9,7 @@ metadata:
   annotations:
     argocd.argoproj.io/manifest-generate-paths: .. # Ensures charts path and values path is available for templating
 spec:
+  goTemplate: true
   generators:
     - merge:
         mergeKeys:
@@ -34,7 +35,7 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      auto.deploy: 'true'
+                      auto.deploy: '{{ auto.deploy }}'
           # Gets each chart in charts/ and matches service overrides to cluster
           - matrix:
               generators:
@@ -51,7 +52,7 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      # auto.deploy: 'true'
+                      auto.deploy: '{{ auto.deploy }}'
       # Limit service applications per env/cluster ( auto.deploy ) 
       # Limit service applications per folder ( path.basename ) list
       selector:
