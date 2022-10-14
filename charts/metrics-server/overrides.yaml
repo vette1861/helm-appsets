@@ -1,5 +1,6 @@
 - env: dev
   name: minikube-dev
+  auto.deploy: no
   chart:
     version: 6.2.1
     name: metrics-server

@@ -1,7 +1,6 @@
 - env: dev
   name: minikube-dev
-  # automate: "true"
-  # namespace: override-namespace
+  # auto.deploy:
   chart:
     version: 6.2.1
     name: metrics-server
