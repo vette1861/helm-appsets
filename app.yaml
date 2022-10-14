@@ -32,7 +32,6 @@ spec:
                 - clusters:
                     selector:
                       matchLabels:
-                        auto.deploy: true
                         env: '{{ env }}'
                     values:
                       chart: '{{ path.basename }}-{{ chart.version }}'

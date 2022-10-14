@@ -1,24 +1,28 @@
 - env: sandbox
   app: metrics-server-too
   namespace: observability
+  auto.deploy: "false"
   chart:
     version: 5.11.7
     name: metrics-server
 - env: dev
   app: metrics-server-too
   namespace: observability
+  auto.deploy: "false"
   chart:
     version: 5.11.7
     name: metrics-server
 - env: staging
   app: metrics-server-too
   namespace: observability
+  auto.deploy: "false"
   chart:
     version: 5.11.7
     name: metrics-server
 - env: prod
   app: metrics-server-too
   namespace: observability
+  auto.deploy: "false"
   chart:
     version: 5.11.7
     name: metrics-server
