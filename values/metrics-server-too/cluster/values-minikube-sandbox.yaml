@@ -1,0 +1,3 @@
+metrics-server:
+  podLabels:
+    clusterValues: "true"
