@@ -1,6 +1,7 @@
 - env: dev
   name: minikube-dev
   automate: "true"
+  namespace: newnew
   chart:
     version: 6.2.1
     name: metrics-server
