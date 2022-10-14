@@ -17,6 +17,7 @@ spec:
           - env
           - path.basename
         generators:
+          # Gets each chart in charts/ and matches service defaults to cluster
           - matrix:
               generators:
                 - git:
@@ -32,13 +33,14 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
+          # Gets each chart in charts/ and matches service overrides to cluster
           - matrix:
               generators:
                 - git:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
-                    - path: charts/**/overrides.yaml 
+                    - path: charts/**/overrides.yaml
                 - clusters:
                     selector:
                       matchLabels:
@@ -47,9 +49,16 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
+      # Limit service applications per env/cluster ( auto.deploy ) 
+      # Limit service applications per folder ( path.basename ) list
       selector:
         matchLabels:
-          auto.deploy: "true"
+          auto.deploy: "true" # To prevent ArgoCD from generating an application for a specific env/cluster
+        matchExpressions:
+          - key: path.basename
+            operator: In
+            values: # List of enabled core service folders 
+              - metrics-server
   template:
     metadata:
       name: '{{ app }}-{{ name }}'
@@ -57,7 +66,6 @@ spec:
         app: '{{ app }}'
         env: '{{ env }}'
         version: '{{ chart.version }}'
-        autoDeploy: '{{ auto.deploy }}'
     spec:
       project: default
       destination:
