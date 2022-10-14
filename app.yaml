@@ -20,11 +20,6 @@ spec:
           - matrix:
               generators:
                 - git:
-                    selector:
-                      matchExpressions:
-                        - key: auto.deploy
-                          operator: In
-                          values: ["true"]
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
@@ -37,15 +32,9 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      auto.deploy: '{{ auto.deploy }}'
           - matrix:
               generators:
                 - git:
-                    selector:
-                      matchExpressions:
-                        - key: auto.deploy
-                          operator: In
-                          values: ["true"]
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
@@ -58,7 +47,9 @@ spec:
                       chart: '{{ path.basename }}-{{ chart.version }}'
                       path: '{{ path }}'
                       env: '{{ env }}'
-                      auto.deploy: '{{ auto.deploy }}'
+      selector:
+        matchLabels:
+          auto.deploy: "true"
   template:
     metadata:
       name: '{{ app }}-{{ name }}'
