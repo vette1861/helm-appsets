@@ -37,7 +37,7 @@ spec:
                       chart: '{{ .path.basename }}-{{ .chart.version }}'
                       basename: '{{ .path.basename }}'
                       env: '{{ .env }}'
-                      auto.deploy: 'true'
+                      auto.deploy: "true"
           # Gets each chart in charts/ and matches service overrides to cluster
           - matrix:
               generators:
@@ -72,7 +72,7 @@ spec:
       labels:
         app: '{{ .app }}'
         env: '{{ .values.env }}'
-        test: '{{ .values.auto.deploy }}'
+        test: values[auto.deploy]
         # path: '{{ .path }}'
         path: '{{ .path.basenameNormalized }}'
         version: '{{ .chart.version }}'
