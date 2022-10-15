@@ -16,7 +16,9 @@ spec:
           - name
           - server
           - env
-          - path.basename
+          - path
+          - chart
+          # - chart["version"]
         generators:
           # Gets each chart in charts/ and matches service defaults to cluster
           - matrix:
@@ -25,17 +27,17 @@ spec:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
-                    - path: charts/**/defaults.yaml 
+                    - path: "charts/**/defaults.yaml"
                 - clusters:
                     selector:
                       matchLabels:
-                        env: '{{ env }}'
+                        env: '{{ .env }}'
                     values:
-                      app: '{{ app }}'
-                      chart: '{{ path.basename }}-{{ chart.version }}'
-                      path: '{{ path }}'
-                      env: '{{ env }}'
-                      auto.deploy: '{{ auto.deploy }}'
+                      # app: '{{ .app }}'
+                      chart: '{{ .path.basename }}-{{ .chart.version }}'
+                      basename: '{{ .path.basename }}'
+                      env: '{{ .env }}'
+                      auto.deploy: 'true'
           # Gets each chart in charts/ and matches service overrides to cluster
           - matrix:
               generators:
@@ -43,47 +45,51 @@ spec:
                     repoURL: https://github.com/vette1861/helm-appsets.git
                     revision: HEAD
                     files:
-                    - path: charts/**/overrides.yaml
+                    - path: "charts/**/overrides.yaml"
                 - clusters:
                     selector:
                       matchLabels:
-                        env: '{{ env }}'
+                        env: '{{ .env }}'
                     values:
-                      chart: '{{ path.basename }}-{{ chart.version }}'
-                      path: '{{ path }}'
-                      env: '{{ env }}'
-                      auto.deploy: '{{ auto.deploy }}'
+                      chart: '{{ .path.basename }}-{{ .chart.version }}'
+                      basename: '{{ .path.basename }}'
+                      env: '{{ .env }}'
+                      auto.deploy: '{{ .auto.deploy }}'
       # Limit service applications per env/cluster ( auto.deploy ) 
       # Limit service applications per folder ( path.basename ) list
-      selector:
-        matchLabels:
-          values.auto.deploy: "true" # To prevent ArgoCD from generating an application for a specific env/cluster
-        matchExpressions:
-          - key: path.basename
-            operator: NotIn
-            values: # List of core service folders to ignore
-              - opa-policies
+      # selector:
+      #   matchLabels:
+      #     auto.deploy: "true"
+      #     "{{'{{.values.auto.deploy}}'}}": "true" # To prevent ArgoCD from generating an application for a specific env/cluster
+        # matchExpressions:
+        #   - key: path
+        #     operator: In
+        #     values: # List of core service folders to ignore
+        #       - metrics-server
   template:
     metadata:
-      name: '{{ app }}-{{ name }}'
+      name: '{{ .app }}-{{ .name }}'
       labels:
-        app: '{{ app }}'
-        env: '{{ env }}'
-        version: '{{ chart.version }}'
-        deploy: '{{ values.auto.deploy }}'
+        app: '{{ .app }}'
+        env: '{{ .values.env }}'
+        test: '{{ .values.auto.deploy }}'
+        # path: '{{ .path }}'
+        path: '{{ .path.basenameNormalized }}'
+        version: '{{ .chart.version }}'
+        # deploy: '{{ .auto.deploy }}'
     spec:
       project: default
       destination:
-        server: '{{ server }}'
-        namespace: '{{ namespace }}'
+        server: '{{ .server }}'
+        namespace: '{{ .namespace }}'
       source:
         helm:
-          releaseName: '{{ app }}'
+          releaseName: '{{ .app }}'
           valueFiles: # Optional cluster values file and env values file
-            - '/values/{{ app }}/cluster/values-{{ name }}.yaml'
-            - '/values/{{ app }}/env/values-{{ env }}.yaml'
+            - '/values/{{ .app }}/cluster/values-{{ .name }}.yaml'
+            - '/values/{{ .app }}/env/values-{{ .env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ path }}/version-{{ chart.version }}'
+        path: '{{ .path.path }}/version-{{ .chart.version }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
