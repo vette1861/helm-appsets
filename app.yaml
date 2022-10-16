@@ -13,14 +13,12 @@ spec:
   generators:
     - merge:
         mergeKeys:
-          - name
-          - server
           - env
-          - path
-          - chart
+          - name
+          - chartName
           # - chart["version"]
         generators:
-          # Gets each chart in charts/ and matches service defaults to cluster
+        # Gets each chart in charts/ and matches service defaults to cluster
           - matrix:
               generators:
                 - git:
@@ -33,12 +31,7 @@ spec:
                       matchLabels:
                         env: '{{ .env }}'
                     values:
-                      # app: '{{ .app }}'
-                      chart: '{{ .path.basename }}-{{ .chart.version }}'
-                      basename: '{{ .path.basename }}'
-                      env: '{{ .env }}'
-                      auto.deploy: "true"
-          # Gets each chart in charts/ and matches service overrides to cluster
+                      chartName: '{{ .chart.name }}'
           - matrix:
               generators:
                 - git:
@@ -51,15 +44,18 @@ spec:
                       matchLabels:
                         env: '{{ .env }}'
                     values:
-                      chart: '{{ .path.basename }}-{{ .chart.version }}'
-                      basename: '{{ .path.basename }}'
-                      env: '{{ .env }}'
-                      auto.deploy: '{{ .auto.deploy }}'
+                      chartName: '{{ .chart.name }}'
+            # - matrix:
+            #     generators:
+            #       - clusters: {}
+            #       - list:
+            #           elements:
+            #             - env: '{{ .env }}'
       # Limit service applications per env/cluster ( auto.deploy ) 
       # Limit service applications per folder ( path.basename ) list
       # selector:
       #   matchLabels:
-      #     auto.deploy: "true"
+      #     '{{ .autoDeploy }}': "true"
       #     "{{'{{.values.auto.deploy}}'}}": "true" # To prevent ArgoCD from generating an application for a specific env/cluster
         # matchExpressions:
         #   - key: path
@@ -68,19 +64,21 @@ spec:
         #       - metrics-server
   template:
     metadata:
-      name: '{{ .app }}-{{ .name }}'
+      name: '{{ .chart.name }}-{{ .env }}'
       labels:
-        app: '{{ .app }}'
-        env: '{{ .values.env }}'
-        test: values[auto.deploy]
-        # path: '{{ .path }}'
-        path: '{{ .path.basenameNormalized }}'
+        # app: '{{ .app }}'
+        env: '{{ .env }}'
+        # test: '{{ .values.autoDeploy }}'
+        # # path: '{{ .path }}'
+        path: '{{ .basename }}'
         version: '{{ .chart.version }}'
+        # defaultTest: '{{ .values.defaultName }}'
+        # defaultTest: 'default-{{ default "hello" .chart.default}}'
         # deploy: '{{ .auto.deploy }}'
     spec:
       project: default
       destination:
-        server: '{{ .server }}'
+        server: '{{ .name }}'
         namespace: '{{ .namespace }}'
       source:
         helm:

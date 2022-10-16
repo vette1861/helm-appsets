@@ -2,6 +2,7 @@
   app: metrics-server-too
   namespace: observability
   auto.deploy: false
+  chartName: metrics-server
   chart:
     version: 5.11.7
     name: metrics-server
@@ -9,6 +10,7 @@
   app: metrics-server-too
   namespace: observability
   auto.deploy: false
+  chartName: metrics-server
   chart:
     version: 5.11.7
     name: metrics-server
@@ -16,6 +18,7 @@
   app: metrics-server-too
   namespace: observability
   auto.deploy: false
+  chartName: metrics-server
   chart:
     version: 5.11.7
     name: metrics-server
@@ -23,6 +26,7 @@
   app: metrics-server-too
   namespace: observability
   auto.deploy: false
+  chartName: metrics-server
   chart:
     version: 5.11.7
     name: metrics-server
