@@ -66,13 +66,13 @@ spec:
         #       - metrics-server
   template:
     metadata:
-      name: '{{ .chart.name }}-{{ .env }}'
+      name: '{{ .app }}-{{ .env }}'
       labels:
         # app: '{{ .app }}'
         env: '{{ .env }}'
         # test: '{{ .values.autoDeploy }}'
         # # path: '{{ .path }}'
-        path: '{{ .basename }}'
+        # path: '{{ .basename }}'
         version: '{{ .chart.version }}'
         # defaultTest: '{{ .values.defaultName }}'
         # defaultTest: 'default-{{ default "hello" .chart.default}}'
@@ -80,7 +80,7 @@ spec:
     spec:
       project: default
       destination:
-        server: '{{ .name }}'
+        server: '{{ .server }}'
         namespace: '{{ .namespace }}'
       source:
         helm:

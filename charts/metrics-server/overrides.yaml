@@ -1,5 +1,6 @@
 - env: dev
   name: minikube-dev
+  app: metrics-server
   autoDeploy: "false"
   chartName: metrics-server
   chart:
