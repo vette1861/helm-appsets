@@ -16,6 +16,7 @@ spec:
           - env
           - name
           - chartName
+          - app
           # - chart["version"]
         generators:
         # Gets each chart in charts/ and matches service defaults to cluster
@@ -31,7 +32,8 @@ spec:
                       matchLabels:
                         env: '{{ .env }}'
                     values:
-                      chartName: '{{ .chart.name }}'
+                      # chartName: '{{ .chart.name }}'
+                      app: '{{ .app }}'
           - matrix:
               generators:
                 - git:
@@ -43,8 +45,8 @@ spec:
                     selector:
                       matchLabels:
                         env: '{{ .env }}'
-                    values:
-                      chartName: '{{ .chart.name }}'
+                    # values:
+                      # chartName: '{{ .chart.name }}'
             # - matrix:
             #     generators:
             #       - clusters: {}
