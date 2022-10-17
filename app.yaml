@@ -13,20 +13,30 @@ spec:
   generators:
     - matrix:
         generators:
+          - clusters:
+              values:
+                env:  '{{ .metadata.labels.env }}'
           - git:
               repoURL: https://github.com/vette1861/helm-appsets.git
               revision: HEAD
               files:
               - path: "charts/**/defaults.yaml"
-          - clusters:
-              selector:
-                matchExpressions:
-                - key: env
-                  operator: In
-                  values: 
-                  - '{{ .envList.values }}'
-              values:
-                clusterEnv: '{{ .metadata.labels.env }}'
+      selector:
+        matchExpressions:
+        - key: name
+          operator: In
+          values:
+          - dev
+        # matchLabels:
+        #   envList.name: 'dev'
+                # specialEnv: '{{ range $index, $env := .envList }}{{.name}}{{end}}'
+                  # - '{{ range $index, $env := .envList }}{{if eq $index 0}}{{.name}}{{end}}{{end}}'
+                  # - '{{ range $index, $env := .envList }}{{if eq $index 1}}{{.name}}{{end}}{{end}}'
+                  # - '{{ range $index, $env := .envList }}{{if eq $index 2}}{{.name}}{{end}}{{end}}'
+                  # - '{{ range $index, $env := .envList }}{{if eq $index 3}}{{.name}}{{end}}{{end}}'
+                  # values: ['{{range $index, $env := .envList}}{{if ne $index 0}},{{end}}{{.name}}{{end}}']
+              # values:
+              #   clusterEnv: '{{ .metadata.labels.env }}'
       # selector:
       #   matchLabels:
       #     serviceType: autoDeployCoreService
@@ -35,6 +45,7 @@ spec:
       name: '{{ .app }}-{{ .metadata.labels.env }}-{{ .name }}'
       labels:
         app: '{{ .app }}'
+        env: '{{ .metadata.labels.env }}'
         # env: "{{range .envList }}{{.env }}{{end}}"
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
