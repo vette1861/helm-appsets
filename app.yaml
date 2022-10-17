@@ -49,9 +49,9 @@ spec:
                       basename: '{{ .path.basename }}'
       # Limit service applications per env/cluster ( auto.deploy ) 
       # Limit service applications per folder ( path.basename ) list
-      # selector:
-      #   matchLabels:
-      #     '{{ .autoDeploy }}': "true"
+      selector:
+        matchLabels:
+          '{{ .serviceType }}': core
       #     "{{'{{.values.auto.deploy}}'}}": "true" # To prevent ArgoCD from generating an application for a specific env/cluster
       selector:
         matchExpressions:
@@ -67,6 +67,7 @@ spec:
         env: '{{ .env }}'
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
+        serviceType: '{{ .serviceType }}'
         # defaultTest: '{{ .values.defaultName }}'
         # defaultTest: 'default-{{ default "hello" .chart.default}}'
         # deploy: '{{ .auto.deploy }}'
