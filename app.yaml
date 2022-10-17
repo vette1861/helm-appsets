@@ -17,9 +17,8 @@ spec:
           - name
           - chartName
           - app
-          # - chart["version"]
         generators:
-        # Gets each chart in charts/ and matches service defaults to cluster
+          # Gets each chart in charts/ and matches service defaults to cluster
           - matrix:
               generators:
                 - git:
@@ -32,8 +31,8 @@ spec:
                       matchLabels:
                         env: '{{ .env }}'
                     values:
-                      # chartName: '{{ .chart.name }}'
                       app: '{{ .app }}'
+                      basename: '{{ .path.basename }}'
           - matrix:
               generators:
                 - git:
@@ -45,35 +44,29 @@ spec:
                     selector:
                       matchLabels:
                         env: '{{ .env }}'
-                    # values:
-                      # chartName: '{{ .chart.name }}'
-            # - matrix:
-            #     generators:
-            #       - clusters: {}
-            #       - list:
-            #           elements:
-            #             - env: '{{ .env }}'
+                    values:
+                      app: '{{ .app }}'
+                      basename: '{{ .path.basename }}'
       # Limit service applications per env/cluster ( auto.deploy ) 
       # Limit service applications per folder ( path.basename ) list
       # selector:
       #   matchLabels:
       #     '{{ .autoDeploy }}': "true"
       #     "{{'{{.values.auto.deploy}}'}}": "true" # To prevent ArgoCD from generating an application for a specific env/cluster
-        # matchExpressions:
-        #   - key: path
-        #     operator: In
-        #     values: # List of core service folders to ignore
-        #       - metrics-server
+      selector:
+        matchExpressions:
+          - key: 'values.basename'
+            operator: NotIn
+            values: # List of core service folders to ignore
+              - metrics-server-too
   template:
     metadata:
-      name: '{{ .app }}-{{ .env }}'
+      name: '{{ .app }}-{{ .env }}-{{ .name }}'
       labels:
-        # app: '{{ .app }}'
+        app: '{{ .app }}'
         env: '{{ .env }}'
-        # test: '{{ .values.autoDeploy }}'
-        # # path: '{{ .path }}'
-        # path: '{{ .basename }}'
-        version: '{{ .chart.version }}'
+        version: '{{ .chartVersion }}'
+        path: '{{ .path.basename }}'
         # defaultTest: '{{ .values.defaultName }}'
         # defaultTest: 'default-{{ default "hello" .chart.default}}'
         # deploy: '{{ .auto.deploy }}'
@@ -89,7 +82,7 @@ spec:
             - '/values/{{ .app }}/cluster/values-{{ .name }}.yaml'
             - '/values/{{ .app }}/env/values-{{ .env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '{{ .path.path }}/version-{{ .chart.version }}'
+        path: '/{{ .path.path }}/version-{{ .chartVersion }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
