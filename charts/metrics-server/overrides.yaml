@@ -1,6 +1,6 @@
 app: metrics-server
 envList:
-  - env: dev
+  - env: sandbox
 serviceType: autoDeployCoreService
 chartName: metrics-server
 chartVersion: 6.2.1
