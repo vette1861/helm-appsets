@@ -24,7 +24,7 @@ spec:
                 - key: env
                   operator: In
                   values: 
-                  - '{{.envList }}{{.}}'
+                  - '{{ .envList.values }}'
               values:
                 clusterEnv: '{{ .metadata.labels.env }}'
       # selector:
