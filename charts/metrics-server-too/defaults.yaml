@@ -10,27 +10,27 @@
 - env: dev
   app: metrics-server-too
   namespace: observability
-  auto.deploy: false
   chartName: metrics-server
   chartVersion: 5.11.7
+  serviceType: core
   chart:
     version: 5.11.7
     name: metrics-server
 - env: staging
   app: metrics-server-too
   namespace: observability
-  auto.deploy: false
   chartName: metrics-server
   chartVersion: 5.11.7
+  serviceType: core
   chart:
     version: 5.11.7
     name: metrics-server
 - env: prod
   app: metrics-server-too
   namespace: observability
-  auto.deploy: false
   chartName: metrics-server
   chartVersion: 5.11.7
+  serviceType: core
   chart:
     version: 5.11.7
     name: metrics-server
