@@ -7,6 +7,7 @@
 - env: dev
   app: metrics-server
   namespace: observability
+  serviceType: autoDeployCoreService
   chartName: metrics-server
   chartVersion: 5.11.7
 - env: staging

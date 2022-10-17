@@ -11,9 +11,6 @@ metadata:
 spec:
   goTemplate: true
   generators:
-    - list:
-        elements:
-        - serviceType: autoDeployCoreService
     - merge:
         mergeKeys:
           - env
@@ -63,6 +60,7 @@ spec:
         env: '{{ .metadata.labels.env }}'
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
+        foo: '{{ .serviceType }}'
     spec:
       project: default
       destination:
