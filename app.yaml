@@ -32,7 +32,7 @@ spec:
                       matchExpressions:
                       - key: env
                         operator: In
-                        values: '{{.envList}}'
+                        values: .envList
                         # env: '{{.env}}'
                     values:
                       app: '{{ .app }}'
@@ -50,7 +50,7 @@ spec:
                       matchExpressions:
                       - key: env
                         operator: In
-                        values: '{{ .envList }}'
+                        values: .envList
                     values:
                       app: '{{ .app }}'
                       basename: '{{ .path.basename }}'
