@@ -1,7 +1,6 @@
 app: metrics-server
 envList:
   - env: dev
-namespace: observability
 serviceType: autoDeployCoreService
 chartName: metrics-server
 chartVersion: 5.11.7
