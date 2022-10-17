@@ -3,4 +3,4 @@
   chartVersion: 6.2.1
   app: metrics-server
   name: minikube-dev
-  serviceType: core
+  serviceType: autoDeployCoreService

@@ -3,24 +3,24 @@
   chartVersion: 5.11.7
   app: metrics-server
   namespace: observability
-  serviceType: core
+  serviceType: autoDeployCoreService
 - env: dev
   chartName: metrics-server
   chartVersion: 5.11.7
   app: metrics-server
   namespace: observability
-  serviceType: core
+  serviceType: autoDeployCoreService
 - env: staging
   app: metrics-server
   chartName: metrics-server
   chartVersion: 5.11.7
   app: metrics-server
   namespace: observability
-  serviceType: core
+  serviceType: autoDeployCoreService
 - env: prod
   app: metrics-server
   chartName: metrics-server
   chartVersion: 5.11.7
   app: metrics-server
   namespace: observability
-  serviceType: core
+  serviceType: autoDeployCoreService

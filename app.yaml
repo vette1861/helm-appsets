@@ -49,7 +49,7 @@ spec:
                       basename: '{{ .path.basename }}'
       selector:
         matchLabels:
-          serviceType: core
+          serviceType: autoDeployCoreService
   template:
     metadata:
       name: '{{ .app }}-{{ .env }}-{{ .name }}'
@@ -63,7 +63,7 @@ spec:
       project: default
       destination:
         server: '{{ .server }}'
-        namespace: '{{ .namespace }}{{ default "" .defaultNamespace }}'
+        namespace: '{{ .namespace }}'
       source:
         helm:
           releaseName: '{{ .app }}'
