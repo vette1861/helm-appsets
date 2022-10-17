@@ -63,7 +63,7 @@ spec:
       project: default
       destination:
         server: '{{ .server }}'
-        namespace: '{{ .namespace }}'
+        namespace: '{{ .namespace }}{{ default "" .defaultNamespace }}'
       source:
         helm:
           releaseName: '{{ .app }}'
