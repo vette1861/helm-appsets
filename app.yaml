@@ -13,7 +13,7 @@ spec:
   generators:
     - merge:
         mergeKeys:
-          - env
+          - .env
           - name
           - chartName
           - app
@@ -31,7 +31,7 @@ spec:
                     #   matchExpressions:
                     #   - key: env
                     #     operator: In
-                    #     values: ['{{ range .envList }}{{.env}}{{end}}']
+                    #     values: ['{{ range .envList }}{{end}}']
                     values:
                       app: '{{ .app }}'
                       basename: '{{ .path.basename }}'

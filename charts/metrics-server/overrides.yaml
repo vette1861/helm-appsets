@@ -3,4 +3,4 @@ envList:
   - env: dev
 serviceType: autoDeployCoreService
 chartName: metrics-server
-chartVersion: 5.11.7
+chartVersion: 6.2.1
