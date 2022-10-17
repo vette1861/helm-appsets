@@ -29,7 +29,7 @@ spec:
                 - clusters:
                     selector:
                       matchLabels:
-                        env: '{{ .list.env }}'
+                        env: '{{ .env }}'
                     values:
                       app: '{{ .app }}'
                       basename: '{{ .path.basename }}'
@@ -43,7 +43,7 @@ spec:
                 - clusters:
                     selector:
                       matchLabels:
-                        env: '{{ .list.env }}'
+                        env: '{{ .env }}'
                     values:
                       app: '{{ .app }}'
                       basename: '{{ .path.basename }}'
@@ -52,11 +52,11 @@ spec:
           serviceType: core
   template:
     metadata:
-      name: '{{ .app }}-{{ .list.env }}-{{ .name }}'
+      name: '{{ .app }}-{{ .env }}-{{ .name }}'
       labels:
         app: '{{ .app }}'
-        env: '{{ .list.env }}'
-        version: '{{ .list.chartVersion }}'
+        env: '{{ .env }}'
+        version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
         serviceType: '{{ .serviceType }}'
     spec:
@@ -69,9 +69,9 @@ spec:
           releaseName: '{{ .app }}'
           valueFiles: # Optional cluster values file and env values file
             - '/values/{{ .app }}/cluster/values-{{ .name }}.yaml'
-            - '/values/{{ .app }}/env/values-{{ .list.env }}.yaml'
+            - '/values/{{ .app }}/env/values-{{ .env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '/{{ .path.path }}/version-{{ .list.chartVersion }}'
+        path: '/{{ .path.path }}/version-{{ .chartVersion }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
