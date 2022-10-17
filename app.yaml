@@ -13,20 +13,21 @@ spec:
   generators:
     - matrix:
         generators:
-          - clusters:
-              values:
-                env:  '{{ .metadata.labels.env }}'
           - git:
               repoURL: https://github.com/vette1861/helm-appsets.git
               revision: HEAD
               files:
               - path: "charts/**/defaults.yaml"
-      selector:
-        matchExpressions:
-        - key: name
-          operator: In
-          values:
-          - dev
+          - clusters:
+              values:
+                env:  '{{ .metadata.labels.env }}'
+                envLength: '{{ sub (len .envList) 1 }}'
+      # selector:
+      #   matchExpressions:
+      #   - key: 'envList[*].envName'
+      #     operator: In
+      #     values:
+      #     - dev
         # matchLabels:
         #   envList.name: 'dev'
                 # specialEnv: '{{ range $index, $env := .envList }}{{.name}}{{end}}'
@@ -46,6 +47,8 @@ spec:
       labels:
         app: '{{ .app }}'
         env: '{{ .metadata.labels.env }}'
+        envLength: '{{ .values.envLength }}'
+        envCheck: '{{ index .envList 0}}{{.envName}}'
         # env: "{{range .envList }}{{.env }}{{end}}"
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'

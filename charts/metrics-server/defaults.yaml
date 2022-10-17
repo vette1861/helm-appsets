@@ -1,9 +1,9 @@
 app: metrics-server
 envList: 
-- envName: dev
-- envName: sandbox 
-- envName: staging
-- envName: prod
+- dev
+- sandbox 
+- staging
+- prod
 namespace: observability
 serviceType: autoDeployCoreService
 chartName: metrics-server
