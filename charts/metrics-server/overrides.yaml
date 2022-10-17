@@ -1,6 +1,6 @@
 app: metrics-server
-envList: |-
-  dev
+envList:
+  - dev
 namespace: observability
 serviceType: autoDeployCoreService
 chartName: metrics-server
