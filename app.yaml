@@ -28,11 +28,16 @@ spec:
                     - path: "charts/**/defaults.yaml"
                 - clusters:
                     selector:
-                      matchLabels:
-                        env: '{{.env}}'
+                      # matchLabels:
+                      matchExpressions:
+                      - key: env
+                        operator: In
+                        values: '{{.envList}}'
+                        # env: '{{.env}}'
                     values:
                       app: '{{ .app }}'
                       basename: '{{ .path.basename }}'
+                      # env: '{{ .metadata.labels.env }}'
           - matrix:
               generators:
                 - git:
@@ -42,20 +47,23 @@ spec:
                     - path: "charts/**/overrides.yaml"
                 - clusters:
                     selector:
-                      matchLabels:
-                        env: '{{ .env }}'
+                      matchExpressions:
+                      - key: env
+                        operator: In
+                        values: '{{ .envList }}'
                     values:
                       app: '{{ .app }}'
                       basename: '{{ .path.basename }}'
+                      # env: '{{ .metadata.labels.env }}'
       selector:
         matchLabels:
           serviceType: autoDeployCoreService
   template:
     metadata:
-      name: '{{ .app }}-{{ .env }}-{{ .name }}'
+      name: '{{ .app }}-{{ metadata.labels.env }}-{{ .name }}'
       labels:
         app: '{{ .app }}'
-        env: '{{ .env }}'
+        env: '{{ metadata.labels.env }}'
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
         serviceType: '{{ .serviceType }}'
@@ -69,7 +77,7 @@ spec:
           releaseName: '{{ .app }}'
           valueFiles: # Optional cluster values file and env values file
             - '/values/{{ .app }}/cluster/values-{{ .name }}.yaml'
-            - '/values/{{ .app }}/env/values-{{ .env }}.yaml'
+            - '/values/{{ .app }}/env/values-{{ metadata.labels.env }}.yaml'
           ignoreMissingValueFiles: true
         path: '/{{ .path.path }}/version-{{ .chartVersion }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
