@@ -1,6 +1,6 @@
 app: metrics-server
 envList: |-
-  "dev","sandbox","staging","prod"
+  \"dev\",\"sandbox\",\"staging\",\"prod\"
 namespace: observability
 serviceType: autoDeployCoreService
 chartName: metrics-server
