@@ -1,18 +1,26 @@
-app: metrics-server
-namespace: observability
-serviceType: core
-list:
-  - env: sandbox
-    chartName: metrics-server
-    chartVersion: 5.11.7
-  - env: dev
-    chartName: metrics-server
-    chartVersion: 5.11.7
-  - env: staging
-    app: metrics-server
-    chartName: metrics-server
-    chartVersion: 5.11.7
-  - env: prod
-    app: metrics-server
-    chartName: metrics-server
-    chartVersion: 5.11.7
+- env: sandbox
+  chartName: metrics-server
+  chartVersion: 5.11.7
+  app: metrics-server
+  namespace: observability
+  serviceType: core
+- env: dev
+  chartName: metrics-server
+  chartVersion: 5.11.7
+  app: metrics-server
+  namespace: observability
+  serviceType: core
+- env: staging
+  app: metrics-server
+  chartName: metrics-server
+  chartVersion: 5.11.7
+  app: metrics-server
+  namespace: observability
+  serviceType: core
+- env: prod
+  app: metrics-server
+  chartName: metrics-server
+  chartVersion: 5.11.7
+  app: metrics-server
+  namespace: observability
+  serviceType: core

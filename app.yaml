@@ -29,7 +29,7 @@ spec:
                 - clusters:
                     selector:
                       matchLabels:
-                        env: '{{ .list.env }}'
+                        env: '{{list.env}}.{{.metadata.labels.env}}'
                     values:
                       app: '{{ .app }}'
                       basename: '{{ .path.basename }}'
@@ -43,7 +43,7 @@ spec:
                 - clusters:
                     selector:
                       matchLabels:
-                        env: '{{ .list.env }}'
+                        env: '{{ list.env }}'
                     values:
                       app: '{{ .app }}'
                       basename: '{{ .path.basename }}'
@@ -52,13 +52,13 @@ spec:
           serviceType: core
   template:
     metadata:
-      name: '{{ .app }}-{{ .list.env }}-{{ .name }}'
+      name: '{{ .app }}-{{ .env }}-{{ .name }}'
       labels:
         app: '{{ .app }}'
-        env: '{{ .list.env }}'
+        env: '{{ .env }}'
         version: '{{ .list.chartVersion }}'
         path: '{{ .path.basename }}'
-        serviceType: '{{ .serviceType }}'
+        serviceType: '{{ serviceType }}'
     spec:
       project: default
       destination:

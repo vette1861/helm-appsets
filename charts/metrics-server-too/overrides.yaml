@@ -1,7 +1,6 @@
-app: metrics-server-too
-list:
-  - env: dev
-    name: minikube-dev
-    serviceType: core
-    chartName: metrics-server
-    chartVersion: 5.11.7
+- env: dev
+  chartName: metrics-server
+  chartVersion: 5.11.7
+  app: metrics-server-too
+  name: minikube-dev
+  serviceType: core
