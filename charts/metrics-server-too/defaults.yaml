@@ -1,7 +1,6 @@
 app: metrics-server-too
 envList: 
   - env: sandbox 
-  - env: dev
   - env: staging
   - env: prod
 namespace: observability
