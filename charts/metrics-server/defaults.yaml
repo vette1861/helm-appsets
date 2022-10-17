@@ -24,3 +24,4 @@
   app: metrics-server
   namespace: observability
   serviceType: core
+defaultNamespace: default
