@@ -1,6 +1,7 @@
-- env: dev
-  chartName: metrics-server
-  chartVersion: 6.2.1
-  app: metrics-server
-  name: minikube-dev
-  serviceType: autoDeployCoreService
+app: metrics-server
+envList:
+  - dev
+namespace: observability
+serviceType: autoDeployCoreService
+chartName: metrics-server
+chartVersion: 6.2.1
