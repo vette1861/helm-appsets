@@ -28,7 +28,8 @@ spec:
                 #   values: ["dev"]
                 - key: env
                   operator: In
-                  values: ['{{.envList}}']
+                  values: ["dev","staging"]
+                  # values: ["{{.envList}}"]
                 # '{{ range $index, $env := .envList }}{{if ne $index 0}}{{print "\n"}}{{end}}{{print "- " .}}{{end}}'
                   # values: ["",'{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}{{print .}}{{end}}']
                   # - sandbox
