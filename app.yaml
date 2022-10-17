@@ -49,7 +49,7 @@ spec:
                       basename: '{{ .path.basename }}'
       selector:
         matchLabels:
-          serviceType: application
+          serviceType: core
   template:
     metadata:
       name: '{{ .app }}-{{ .env }}-{{ .name }}'
