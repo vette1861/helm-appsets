@@ -39,7 +39,7 @@ spec:
               values:
                 env:  '{{ .metadata.labels.env }}'
                 envLength: '{{ sub (len .envList) 1 }}'
-                envCheck: '[{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}"{{print .}}"{{end}}]'
+                # envCheck: '[{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}"{{print .}}"{{end}}]'
         # matchLabels:
         #   envList.name: 'dev'
                 # specialEnv: '{{ range $index, $env := .envList }}{{.name}}{{end}}'
