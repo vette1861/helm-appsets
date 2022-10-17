@@ -11,48 +11,23 @@ metadata:
 spec:
   goTemplate: true
   generators:
-    - merge:
-        mergeKeys:
-          - .env
-          - name
-          - chartName
-          - app
+    - matrix:
         generators:
-          # Gets each chart in charts/ and matches service defaults to cluster
-          - matrix:
-              generators:
-                - git:
-                    repoURL: https://github.com/vette1861/helm-appsets.git
-                    revision: HEAD
-                    files:
-                    - path: "charts/**/defaults.yaml"
-                - clusters:
-                    # selector:
-                    #   matchExpressions:
-                    #   - key: env
-                    #     operator: In
-                    #     values: ['{{ range .envList }}{{end}}']
-                    values:
-                      app: '{{ .app }}'
-                      basename: '{{ .path.basename }}'
-                      env: '{{ .env }}'
-          - matrix:
-              generators:
-                - git:
-                    repoURL: https://github.com/vette1861/helm-appsets.git
-                    revision: HEAD
-                    files:
-                    - path: "charts/**/overrides.yaml"
-                - clusters:
-                    selector:
-                      matchExpressions:
-                      - key: env
-                        operator: In
-                        values: ['{{ range .envList }}{{.env}}{{end}}']
-                    values:
-                      app: '{{ .app }}'
-                      basename: '{{ .path.basename }}'
-                      env: '{{ .env }}'
+          - git:
+              repoURL: https://github.com/vette1861/helm-appsets.git
+              revision: HEAD
+              files:
+              - path: "charts/**/defaults.yaml"
+          - clusters:
+              selector:
+                matchExpressions:
+                - key: env
+                  operator: In
+                  values: 
+                  - '{{ range .envList }}{{print .env }}{{end}}'
+                  - dev
+              values:
+                clusterEnv: '{{ .metadata.labels.env }}'
       # selector:
       #   matchLabels:
       #     serviceType: autoDeployCoreService
@@ -61,7 +36,7 @@ spec:
       name: '{{ .app }}-{{ .metadata.labels.env }}-{{ .name }}'
       labels:
         app: '{{ .app }}'
-        env: '{{ .metadata.labels.env }}'
+        # env: "{{range .envList }}{{.env }}{{end}}"
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
         serviceType: '{{ .serviceType }}'
@@ -75,9 +50,9 @@ spec:
           releaseName: '{{ .app }}'
           valueFiles: # Optional cluster values file and env values file
             - '/values/{{ .app }}/cluster/values-{{ .name }}.yaml'
-            - '/values/{{ .app }}/env/values-{{ .env }}.yaml'
+            - '/values/{{ .app }}/env/values-{{ .metadata.labels.env }}.yaml'
           ignoreMissingValueFiles: true
-        path: '/{{ .path.path }}/version-{{ .chartVersion }}'
+        path: '{{ .path.path }}/version-{{ .chartVersion }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:
