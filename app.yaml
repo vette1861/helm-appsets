@@ -55,6 +55,8 @@ spec:
                       # env: '{{ .env }}'
       # selector:
       #   matchLabels:
+      #     deploy: "true"
+      #   matchLabels:
       #     serviceType: autoDeployCoreService
   template:
     metadata:
