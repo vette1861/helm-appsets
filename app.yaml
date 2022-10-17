@@ -11,25 +11,43 @@ metadata:
 spec:
   goTemplate: true
   generators:
-    - matrix:
+    - merge:
+        mergeKeys:
+          - env
+          - app
+          - nameName
+          - chartName
         generators:
-          - git:
-              repoURL: https://github.com/vette1861/helm-appsets.git
-              revision: HEAD
-              files:
-              - path: "charts/**/defaults.yaml"
-          - clusters:
-              selector:
-                matchExpressions:
-                - key: env
-                  operator: Exists
-                # - key: env
-                #   operator: In
-                #   values: ["dev"]
-                - key: env
-                  operator: In
-                  # values: ["dev","staging"]
-                  values: ['{{.envList}}']
+          - matrix:
+              generators:
+                - git:
+                    repoURL: https://github.com/vette1861/helm-appsets.git
+                    revision: HEAD
+                    files:
+                    - path: "charts/**/defaults.yaml"
+                - list:
+                    elements:
+                    - envName: '{{ .env }}'
+                      appName: '{{ .app }}'
+                      chartNameName: '{{ .chartName }}'
+                      nameName: 'minikube-dev'
+                      serverName: 'https://kubernetes.default.svc'
+                      chartVersionName: '{{ .chartVersion }}'
+          - matrix:
+              generators:
+                - git:
+                    repoURL: https://github.com/vette1861/helm-appsets.git
+                    revision: HEAD
+                    files:
+                    - path: "charts/**/overrides.yaml"
+                - list:
+                    elements:
+                    - envName: '{{ .env }}'
+                      appName: '{{ .app }}'
+                      chartNameName: '{{ .chartName }}'
+                      nameName: 'minikube-dev'
+                      serverName: 'https://kubernetes.default.svc'
+                      chartVersionName: '{{ .chartVersion }}'
                 # '{{ range $index, $env := .envList }}{{if ne $index 0}}{{print "\n"}}{{end}}{{print "- " .}}{{end}}'
                   # values: ["",'{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}{{print .}}{{end}}']
                   # - sandbox
@@ -37,9 +55,6 @@ spec:
                   # - prod
                   # \"sandbox,staging,prod\"
                   # values: ['{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}{{print .}}{{end}}']
-              values:
-                env:  '{{ .metadata.labels.env }}'
-                envLength: '{{ sub (len .envList) 1 }}'
                 # envCheck: '[{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}"{{print .}}"{{end}}]'
         # matchLabels:
         #   envList.name: 'dev'
@@ -56,13 +71,10 @@ spec:
       #     serviceType: autoDeployCoreService
   template:
     metadata:
-      name: '{{ .app }}-{{ .metadata.labels.env }}-{{ .name }}'
+      name: '{{ .appName }}-{{ .envName }}-{{ .nameName }}'
       labels:
-        app: '{{ .app }}'
-        env: '{{ .metadata.labels.env }}'
-        envLength: '{{ .values.envLength }}'
-        # envCheck: '{{ values.envCheck }}'
-        # envCheck: '{{ index .envList 0}}{{.envName}}'
+        app: '{{ .appName }}'
+        env: '{{ .envName }}'
         # env: "{{range .envList }}{{.env }}{{end}}"
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
@@ -70,14 +82,14 @@ spec:
     spec:
       project: default
       destination:
-        server: '{{ .server }}'
+        server: '{{ .serverName }}'
         namespace: '{{ .namespace }}'
       source:
         helm:
-          releaseName: '{{ .app }}'
+          releaseName: '{{ .appName }}'
           valueFiles: # Optional cluster values file and env values file
-            - '/values/{{ .app }}/cluster/values-{{ .name }}.yaml'
-            - '/values/{{ .app }}/env/values-{{ .metadata.labels.env }}.yaml'
+            - '/values/{{ .appName }}/cluster/values-{{ .nameName }}.yaml'
+            - '/values/{{ .appName }}/env/values-{{ .envName }}.yaml'
           ignoreMissingValueFiles: true
         path: '{{ .path.path }}/version-{{ .chartVersion }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
