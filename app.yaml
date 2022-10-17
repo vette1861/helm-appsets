@@ -14,10 +14,11 @@ spec:
     - merge:
         mergeKeys:
           - env
-          - app
-          - nameName
+          - name
           - chartName
+          - app
         generators:
+          # Gets each chart in charts/ and matches service defaults to cluster
           - matrix:
               generators:
                 - git:
@@ -25,14 +26,14 @@ spec:
                     revision: HEAD
                     files:
                     - path: "charts/**/defaults.yaml"
-                - list:
-                    elements:
-                    - envName: '{{ .env }}'
-                      appName: '{{ .app }}'
-                      chartNameName: '{{ .chartName }}'
-                      nameName: 'minikube-dev'
-                      serverName: 'https://kubernetes.default.svc'
-                      chartVersionName: '{{ .chartVersion }}'
+                - clusters:
+                    selector:
+                      matchLabels:
+                        env: '{{.env}}'
+                    values:
+                      app: '{{ .app }}'
+                      basename: '{{ .path.basename }}'
+                      env: '{{ .env }}'
           - matrix:
               generators:
                 - git:
@@ -40,56 +41,37 @@ spec:
                     revision: HEAD
                     files:
                     - path: "charts/**/overrides.yaml"
-                - list:
-                    elements:
-                    - envName: '{{ .env }}'
-                      appName: '{{ .app }}'
-                      chartNameName: '{{ .chartName }}'
-                      nameName: 'minikube-dev'
-                      serverName: 'https://kubernetes.default.svc'
-                      chartVersionName: '{{ .chartVersion }}'
-                # '{{ range $index, $env := .envList }}{{if ne $index 0}}{{print "\n"}}{{end}}{{print "- " .}}{{end}}'
-                  # values: ["",'{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}{{print .}}{{end}}']
-                  # - sandbox
-                  # - staging
-                  # - prod
-                  # \"sandbox,staging,prod\"
-                  # values: ['{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}{{print .}}{{end}}']
-                # envCheck: '[{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}"{{print .}}"{{end}}]'
-        # matchLabels:
-        #   envList.name: 'dev'
-                # specialEnv: '{{ range $index, $env := .envList }}{{.name}}{{end}}'
-                  # - '{{ range $index, $env := .envList }}{{if eq $index 0}}{{.name}}{{end}}{{end}}'
-                  # - '{{ range $index, $env := .envList }}{{if eq $index 1}}{{.name}}{{end}}{{end}}'
-                  # - '{{ range $index, $env := .envList }}{{if eq $index 2}}{{.name}}{{end}}{{end}}'
-                  # - '{{ range $index, $env := .envList }}{{if eq $index 3}}{{.name}}{{end}}{{end}}'
-                  # values: ['{{range $index, $env := .envList}}{{if ne $index 0}},{{end}}{{.name}}{{end}}']
-              # values:
-              #   clusterEnv: '{{ .metadata.labels.env }}'
-      # selector:
-      #   matchLabels:
-      #     serviceType: autoDeployCoreService
+                - clusters:
+                    selector:
+                      matchLabels:
+                        env: '{{.env}}'
+                    values:
+                      app: '{{ .app }}'
+                      basename: '{{ .path.basename }}'
+                      env: '{{ .env }}'
+      selector:
+        matchLabels:
+          serviceType: autoDeployCoreService
   template:
     metadata:
-      name: '{{ .appName }}-{{ .envName }}-{{ .nameName }}'
+      name: '{{ .app }}-{{ .metadata.labels.env }}-{{ .name }}'
       labels:
-        app: '{{ .appName }}'
-        env: '{{ .envName }}'
-        # env: "{{range .envList }}{{.env }}{{end}}"
+        app: '{{ .app }}'
+        env: '{{ .metadata.labels.env }}'
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
         serviceType: '{{ .serviceType }}'
     spec:
       project: default
       destination:
-        server: '{{ .serverName }}'
+        server: '{{ .server }}'
         namespace: '{{ .namespace }}'
       source:
         helm:
-          releaseName: '{{ .appName }}'
+          releaseName: '{{ .app }}'
           valueFiles: # Optional cluster values file and env values file
-            - '/values/{{ .appName }}/cluster/values-{{ .nameName }}.yaml'
-            - '/values/{{ .appName }}/env/values-{{ .envName }}.yaml'
+            - '/values/{{ .appName }}/cluster/values-{{ .name }}.yaml'
+            - '/values/{{ .appName }}/env/values-{{ .metadata.labels.env }}.yaml'
           ignoreMissingValueFiles: true
         path: '{{ .path.path }}/version-{{ .chartVersion }}'
         repoURL: https://github.com/vette1861/helm-appsets.git
