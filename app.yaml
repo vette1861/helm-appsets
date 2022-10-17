@@ -19,15 +19,27 @@ spec:
               files:
               - path: "charts/**/defaults.yaml"
           - clusters:
+              selector:
+                matchExpressions:
+                - key: env
+                  operator: Exists
+                # - key: env
+                #   operator: In
+                #   values: ["dev"]
+                - key: env
+                  operator: In
+                  values: ['{{.envList}}']
+                # '{{ range $index, $env := .envList }}{{if ne $index 0}}{{print "\n"}}{{end}}{{print "- " .}}{{end}}'
+                  # values: ["",'{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}{{print .}}{{end}}']
+                  # - sandbox
+                  # - staging
+                  # - prod
+                  # \"sandbox,staging,prod\"
+                  # values: ['{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}{{print .}}{{end}}']
               values:
                 env:  '{{ .metadata.labels.env }}'
                 envLength: '{{ sub (len .envList) 1 }}'
-      # selector:
-      #   matchExpressions:
-      #   - key: 'envList[*].envName'
-      #     operator: In
-      #     values:
-      #     - dev
+                envCheck: '[{{ range $index, $env := .envList }}{{if ne $index 0}},{{end}}"{{print .}}"{{end}}]'
         # matchLabels:
         #   envList.name: 'dev'
                 # specialEnv: '{{ range $index, $env := .envList }}{{.name}}{{end}}'
@@ -48,7 +60,8 @@ spec:
         app: '{{ .app }}'
         env: '{{ .metadata.labels.env }}'
         envLength: '{{ .values.envLength }}'
-        envCheck: '{{ index .envList 0}}{{.envName}}'
+        # envCheck: '{{ values.envCheck }}'
+        # envCheck: '{{ index .envList 0}}{{.envName}}'
         # env: "{{range .envList }}{{.env }}{{end}}"
         version: '{{ .chartVersion }}'
         path: '{{ .path.basename }}'
