@@ -8,6 +8,7 @@ appVersion: "1.0"
 
 dependencies:
 - name: metrics-server
-  version: '6.2.1'
-  repository: https://jfrog.mcng.io/artifactory/helm
+  version: '5.11.7'
+  repository: '@artifactory-virtual'
+  # repository: https://jfrog.mcng.io/artifactory/helm
   # repository: https://charts.bitnami.com/bitnami
