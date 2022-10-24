@@ -1,0 +1,6 @@
+dependencies:
+- name: metrics-server
+  repository: https://jfrog.mcng.io/artifactory/helm-mirror-bitnami
+  version: 6.2.1
+digest: sha256:f69f49a32c68bf3f04dabe12aac6eff113150b3c1979b9883cd2f1cfd9ca5f66
+generated: "2022-10-24T13:02:12.719846-04:00"
