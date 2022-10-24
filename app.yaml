@@ -68,7 +68,6 @@ spec:
         namespace: '{{ .namespace }}'
       source:
         helm:
-          passCredentials: true
           releaseName: '{{ .app }}'
           valueFiles: # Optional cluster values file and env values file
             - '/values/{{ .appName }}/cluster/values-{{ .name }}.yaml'
