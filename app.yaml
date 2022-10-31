@@ -75,6 +75,7 @@ spec:
             - '/values/{{ .appName }}/env/values-{{ .metadata.labels.env }}.yaml'
           ignoreMissingValueFiles: true
         path: '{{ .path.path }}/version-{{ .chartVersion }}'
+        targetRevision: HEAD
         repoURL: https://github.com/vette1861/helm-appsets.git
       syncPolicy:
         syncOptions:

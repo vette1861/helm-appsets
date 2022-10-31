@@ -10,5 +10,3 @@ dependencies:
 - name: metrics-server
   version: '6.2.1'
   repository: https://jfrog.mcng.io/artifactory/helm-mirror-bitnami
-  # repository: https://jfrog.mcng.io/artifactory/helm
-  # repository: https://charts.bitnami.com/bitnami
