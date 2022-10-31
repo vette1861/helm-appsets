@@ -1,4 +1,5 @@
 - env: dev
   app: metrics-server-too
+  namespace: observability-too
   chartName: metrics-server
-  chartVersion: 6.2.1
+  chartVersion: 5.11.7
