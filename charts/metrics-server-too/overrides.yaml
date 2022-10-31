@@ -1,4 +1,4 @@
-- env: sandbox
+- env: dev
   app: metrics-server-too
   namespace: observability-too
   chartName: metrics-server
